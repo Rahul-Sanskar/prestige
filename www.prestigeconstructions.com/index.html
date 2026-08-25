@@ -1417,15 +1417,26 @@ document.addEventListener("DOMContentLoaded", () => {
     <div class="theme-modal-card-body">
       <p>It has come to our attention that fraudsters are misusing the name of Prestige Group to promote fake investment schemes, falsely promising high returns in properties. We urge everyone to be cautious and avoid falling prey to such scams.</p>
       <p>Please note that we have already reported these fraudulent activities to the authorities and are taking steps to address the situation.</p>
-      <p>For authentic information about our projects, always visit our official website: <b>
-          <a href="index.html">www.prestigeconstructions.com</a>
-        </b>
+      <p>For authentic information about our projects, always visit our official website: <b id="official-website-link"><a href="index.html">www.prestigeconstructions.com</a></b>
       </p>
       <!-- <p><b><a href="http://www.prestigeconstructions.com">www.prestigeconstructions.com</a></b></p> -->
       <p>Stay vigilant, and thank you for your continued trust.</p>
       <div class="has-text-right d-block">
         <a class="btn-pop-up full-width theme-btn" href="#" onclick="closeModel('pop-up-info')">Ok</a>
       </div>
+      <script>
+        (function() {
+          var link = document.getElementById('official-website-link');
+          if (link) {
+            var anchor = link.querySelector('a');
+            if (anchor) {
+              var currentDomain = window.location.hostname;
+              anchor.textContent = currentDomain;
+              anchor.href = 'index.html';
+            }
+          }
+        })();
+      </script>
     </div>
   </div>
 </div>
