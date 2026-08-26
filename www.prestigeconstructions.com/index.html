@@ -946,7 +946,370 @@ a[href="#brands"],
         </li>
     </ul>
 </div> -->
-<a href="javascript:void(0);" class="theme-btn enquire-now-sticky-btn enquirylabel passenquiry" open-sidebar="enquire-sidebar">Enquire Now!</a>
+<!-- ══════════════════════════════════════════
+     FLOATING ENQUIRY BUTTON + MODAL FORM
+     ══════════════════════════════════════════ -->
+<style>
+/* ---------- floating button wrapper ---------- */
+#kn-float-btn {
+  position: fixed;
+  bottom: 36px;
+  right: 28px;
+  z-index: 9999;
+  cursor: pointer;
+  pointer-events: auto !important;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* circular SVG text ring */
+#kn-float-btn svg.kn-ring {
+  position: absolute;
+  top: 0; left: 0;
+  width: 90px; height: 90px;
+  animation: kn-spin 9s linear infinite;
+}
+@keyframes kn-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+/* centre icon circle */
+#kn-float-btn .kn-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #856d47;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px rgba(133,109,71,.55);
+  transition: transform .2s, box-shadow .2s;
+  flex-shrink: 0;
+  z-index: 1;
+}
+#kn-float-btn:hover .kn-icon {
+  transform: scale(1.08);
+  box-shadow: 0 6px 24px rgba(133,109,71,.7);
+}
+#kn-float-btn .kn-icon svg {
+  width: 26px; height: 26px;
+  fill: #fff;
+}
+
+/* ---------- modal overlay ---------- */
+#kn-enquiry-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,.55);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  pointer-events: auto !important;
+}
+#kn-enquiry-modal.kn-open {
+  display: flex;
+}
+/* modal card */
+#kn-enquiry-modal .kn-card {
+  background: #fff;
+  width: 100%;
+  max-width: 440px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0,0,0,.25);
+  animation: kn-drop .25s ease;
+}
+@keyframes kn-drop {
+  from { opacity:0; transform:translateY(-16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.kn-card-head {
+  background: #856d47;
+  color: #fff;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.kn-card-head h3 {
+  font-family: 'Argesta Display', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+  margin: 0;
+}
+.kn-close-modal {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  pointer-events: auto !important;
+}
+.kn-card-body {
+  padding: 28px 24px 24px;
+}
+.kn-field {
+  margin-bottom: 20px;
+}
+.kn-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #303030;
+  margin-bottom: 6px;
+}
+.kn-field input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #303030;
+  padding: 8px 0;
+  font-size: 15px;
+  font-family: 'Argesta Display', serif;
+  outline: none;
+  color: #303030;
+  background: transparent;
+  pointer-events: auto !important;
+}
+.kn-field input::placeholder { color: #aaa; font-size: 14px; }
+.kn-phone-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.kn-phone-row select {
+  width: 70px;
+  flex-shrink: 0;
+  border: 0;
+  border-bottom: 1px solid #303030;
+  padding: 8px 0;
+  font-size: 15px;
+  font-family: 'Argesta Display', serif;
+  background: transparent;
+  outline: none;
+  color: #303030;
+  pointer-events: auto !important;
+}
+.kn-phone-row input { flex: 1; }
+.kn-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.kn-consent input[type="checkbox"] {
+  margin-top: 3px;
+  flex-shrink: 0;
+  width: 15px;
+  height: 15px;
+  accent-color: #856d47;
+  cursor: pointer;
+  pointer-events: auto !important;
+}
+.kn-consent span {
+  font-size: 12px;
+  line-height: 18px;
+  color: #545454;
+}
+.kn-btn-row {
+  display: flex;
+  gap: 12px;
+}
+.kn-btn-row button {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: Montserrat, sans-serif;
+  border-radius: 0;
+  cursor: pointer;
+  pointer-events: auto !important;
+  transition: opacity .15s;
+}
+.kn-btn-row button:hover { opacity: .88; }
+#kn-submit-btn {
+  background: #856d47;
+  color: #fff;
+  border: 1px solid #856d47;
+}
+#kn-cancel-btn {
+  background: transparent;
+  color: #856d47;
+  border: 1px solid #856d47;
+}
+/* success message */
+#kn-success-msg {
+  display: none;
+  text-align: center;
+  padding: 32px 24px;
+  color: #303030;
+}
+#kn-success-msg .kn-tick {
+  font-size: 48px;
+  color: #856d47;
+  margin-bottom: 12px;
+}
+#kn-success-msg p {
+  font-size: 15px;
+  color: #545454;
+}
+</style>
+
+<!-- Floating circle button -->
+<div id="kn-float-btn" role="button" aria-label="Know More – open enquiry form" tabindex="0">
+  <!-- rotating text ring -->
+  <svg class="kn-ring" viewBox="0 0 90 90" aria-hidden="true">
+    <defs>
+      <path id="kn-circle-path"
+            d="M 45,45 m -32,0 a 32,32 0 1,1 64,0 a 32,32 0 1,1 -64,0" />
+    </defs>
+    <text fill="#856d47" font-family="Montserrat,sans-serif" font-size="11" font-weight="700" letter-spacing="2.8">
+      <textPath href="#kn-circle-path" startOffset="0%">Know More!! • Know More!! •&nbsp;</textPath>
+    </text>
+  </svg>
+  <!-- centre icon -->
+  <div class="kn-icon">
+    <!-- mail / enquiry icon -->
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 2-8 5-8-5h16zm0 12H4V9l8 5 8-5v9z"/>
+    </svg>
+  </div>
+</div>
+
+<!-- Enquiry modal -->
+<div id="kn-enquiry-modal" role="dialog" aria-modal="true" aria-labelledby="kn-modal-title">
+  <div class="kn-card">
+
+    <div class="kn-card-head">
+      <h3 id="kn-modal-title">Enquire Now</h3>
+      <button class="kn-close-modal" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="kn-card-body">
+      <!-- success state (hidden until submit) -->
+      <div id="kn-success-msg">
+        <div class="kn-tick">&#10003;</div>
+        <h4 style="font-family:'Argesta Display',serif;font-size:20px;margin-bottom:8px;">Thank You!</h4>
+        <p>Your enquiry has been received.<br>We'll get back to you shortly.</p>
+      </div>
+
+      <!-- form -->
+      <form id="kn-enquiry-form" novalidate autocomplete="off">
+
+        <div class="kn-field">
+          <label for="kn-name">Your Name *</label>
+          <input type="text" id="kn-name" name="kn_name" placeholder="Enter your name" required>
+        </div>
+
+        <div class="kn-field">
+          <label for="kn-email">Email Address *</label>
+          <input type="email" id="kn-email" name="kn_email" placeholder="Enter your email" required>
+        </div>
+
+        <div class="kn-field">
+          <label for="kn-phone">Phone Number *</label>
+          <div class="kn-phone-row">
+            <select id="kn-country" name="kn_country" aria-label="Country code">
+              <option value="+91" selected>+91</option>
+              <option value="+1">+1</option>
+              <option value="+44">+44</option>
+              <option value="+971">+971</option>
+              <option value="+65">+65</option>
+              <option value="+61">+61</option>
+            </select>
+            <input type="tel" id="kn-phone" name="kn_phone"
+                   placeholder="Your phone number"
+                   pattern="[0-9]{7,15}" required>
+          </div>
+        </div>
+
+        <div class="kn-consent">
+          <input type="checkbox" id="kn-consent" name="kn_consent">
+          <span>I hereby authorize to send notifications on SMS / Messages / RCS / Promotional / Informational Messages.</span>
+        </div>
+
+        <div class="kn-btn-row">
+          <button type="submit" id="kn-submit-btn">Submit</button>
+          <button type="button" id="kn-cancel-btn">Cancel</button>
+        </div>
+
+      </form>
+    </div><!-- /.kn-card-body -->
+  </div><!-- /.kn-card -->
+</div><!-- /#kn-enquiry-modal -->
+
+<script>
+(function () {
+  var floatBtn   = document.getElementById('kn-float-btn');
+  var modal      = document.getElementById('kn-enquiry-modal');
+  var closeBtn   = modal.querySelector('.kn-close-modal');
+  var cancelBtn  = document.getElementById('kn-cancel-btn');
+  var form       = document.getElementById('kn-enquiry-form');
+  var successMsg = document.getElementById('kn-success-msg');
+
+  function openModal() {
+    modal.classList.add('kn-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    modal.classList.remove('kn-open');
+    document.body.style.overflow = '';
+  }
+
+  floatBtn.addEventListener('click', openModal);
+  floatBtn.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' ') openModal(); });
+  closeBtn.addEventListener('click', closeModal);
+  cancelBtn.addEventListener('click', closeModal);
+
+  /* close on backdrop click */
+  modal.addEventListener('click', function(e){
+    if(e.target === modal) closeModal();
+  });
+
+  /* close on Escape */
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeModal();
+  });
+
+  /* form submit */
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var name  = document.getElementById('kn-name').value.trim();
+    var email = document.getElementById('kn-email').value.trim();
+    var phone = document.getElementById('kn-phone').value.trim();
+
+    if(!name || !email || !phone){
+      alert('Please fill in all required fields.');
+      return;
+    }
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if(!emailOk){ alert('Please enter a valid email address.'); return; }
+    var phoneOk = /^[0-9]{7,15}$/.test(phone);
+    if(!phoneOk){ alert('Please enter a valid phone number (digits only).'); return; }
+
+    /* hide form, show success */
+    form.style.display = 'none';
+    successMsg.style.display = 'block';
+
+    /* auto-close after 3 s and reset */
+    setTimeout(function(){
+      closeModal();
+      setTimeout(function(){
+        form.reset();
+        form.style.display = '';
+        successMsg.style.display = 'none';
+      }, 400);
+    }, 3000);
+  });
+})();
+</script>
+<!-- ══ end floating enquiry ══ -->
 <script nonce="randomValue">
     // properties-search-tab
     function openTab(evt, tabName) {
