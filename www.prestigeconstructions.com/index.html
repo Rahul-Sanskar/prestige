@@ -111,21 +111,28 @@ a[href="#brands"],
 
 /* "Projects" section heading (Operational Segments) */
 .our-projects-detail .section-title h2,
-.our-projects-col .section-title h2 {
-  color: #ffffff !important;
+.our-projects-col .section-title h2,
+.our-projects-detail .section-title h2 *,
+.our-projects-col .section-title h2 * {
+  color: #000000 !important;
 }
 
 /* "What our Customer Say?" heading */
 .section-our-customer-say .section-title h2,
 .our-customer-say-wrapper .section-title h2,
-.bind_test .section-title h2 {
-  color: #ffffff !important;
+.bind_test .section-title h2,
+.section-our-customer-say .section-title h2 *,
+.our-customer-say-wrapper .section-title h2 *,
+.bind_test .section-title h2 * {
+  color: #000000 !important;
 }
 
 /* "Our Brands" heading */
 .section-our-brand .section-title h2,
-.our-brand-wrapper .section-title h2 {
-  color: #ffffff !important;
+.our-brand-wrapper .section-title h2,
+.section-our-brand .section-title h2 *,
+.our-brand-wrapper .section-title h2 * {
+  color: #000000 !important;
 }
 
 /* Footer links – Privacy Policy / Terms & Conditions / Disclaimer */
@@ -1678,7 +1685,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="our-projects-detail">
             <div class="section-title js-scroll fade-in-top">
               <span class="theme-title">Operational Segments</span>
-              <h2> Projects </h2>
+              <h2 style="color:#000000!important"> Projects </h2>
             </div>
             <div class="our-projects-tab-detail js-scroll fade-in-bottom section3">
               <ul class="tabs-detail">
@@ -1785,11 +1792,24 @@ document.addEventListener("DOMContentLoaded", () => {
   <section class="section section-our-customer-say js-scroll fade-in-bottom hide_review_project is-hidden">
     <div class="container our-customer-say-wrapper bind_test"></div>
   </section>
+  <script>
+  /* Force black on JS-injected "What our Customer Say?" heading */
+  (function forceBlackHeading() {
+    var target = document.querySelector('.bind_test');
+    if (!target) return;
+    var observer = new MutationObserver(function() {
+      target.querySelectorAll('h2').forEach(function(el) {
+        el.style.setProperty('color', '#000000', 'important');
+      });
+    });
+    observer.observe(target, { childList: true, subtree: true });
+  })();
+  </script>
   <section id="brands" class="section section-our-brand light-gray-bg">
     <div class="container our-brand-wrapper">
       <div class="section-title mb-5 has-text-centered js-scroll fade-in-top">
         <span class="theme-title">Verticals</span>
-        <h2> Our Brands </h2>
+        <h2 style="color:#000000!important"> Our Brands </h2>
       </div>
     </div>
     <div class="our-brand-logo-detail js-scroll fade-in-bottom">
