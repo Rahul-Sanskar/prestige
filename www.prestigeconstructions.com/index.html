@@ -2057,21 +2057,22 @@ document.addEventListener("DOMContentLoaded", () => {
    Runs once on load, then watches for any future DOM changes.
 ───────────────────────────────────────────────────────────── */
 (function () {
-  var OLD = [
-    'PRESTIGE ESTATES PROJECTS LIMITED',
-    'Prestige Estates Projects Limited'
+  var replacements = [
+    ['PRESTIGE ESTATES PROJECTS LIMITED', 'PRESTIGE MULUND REALTY PRIVATE LIMITED'],
+    ['Prestige Estates Projects Limited', 'Prestige Mulund Realty Private Limited'],
+    ['Prestige Estates Projects Ltd.', 'Prestige Mulund Realty Private Limited'],
+    ['Prestige Estates Projects Ltd',   'Prestige Mulund Realty Private Limited']
   ];
-  var NEW_UPPER = 'PRESTIGE MULUND REALTY PRIVATE LIMITED';
-  var NEW_TITLE = 'Prestige Mulund Realty Private Limited';
 
   function replaceInNode(node) {
     if (node.nodeType === Node.TEXT_NODE) {
       var val = node.nodeValue;
-      if (val.indexOf(OLD[0]) !== -1) {
-        node.nodeValue = val.split(OLD[0]).join(NEW_UPPER);
-      } else if (val.indexOf(OLD[1]) !== -1) {
-        node.nodeValue = val.split(OLD[1]).join(NEW_TITLE);
-      }
+      replacements.forEach(function(pair) {
+        if (val.indexOf(pair[0]) !== -1) {
+          val = val.split(pair[0]).join(pair[1]);
+        }
+      });
+      node.nodeValue = val;
     } else if (node.nodeType === Node.ELEMENT_NODE) {
       node.childNodes.forEach(replaceInNode);
     }
